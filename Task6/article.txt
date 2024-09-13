@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<HTML LANG="en">
+<HEAD>
+<META http-equiv="content-type" content="text/html; charset=utf-8">
+<META name="viewport" content="width=device-width, initial-scale=1.0">
+<META name="robots" content="nofollow">
+<LINK rel="stylesheet" type="text/css" href="/style/fresh.css" />
+<link rel="stylesheet" type="text/css" href="/fresh/standard.css" />
+<TITLE>TIN: doc/article.txt | Fossies</TITLE>
+<META http-equiv="Content-Script-Type" content="text/javascript">
+<script type="text/javascript" src="/scripts/highlight_styles.js"></script>
+</HEAD>
+<BODY>
+<script type="text/javascript" src="/scripts/wz_tooltip.js"></script>
+<script type="text/javascript" src="/scripts/tip_balloon.js"></script>
+<H2><IMG SRC="/warix/forest1.gif" WIDTH="45" HEIGHT="29" ALT=""> "<A HREF="/">Fossies</A>" - the Free Open Source Software Archive <IMG SRC="/warix/forest2.gif" WIDTH="48" HEIGHT="30" ALT=""></H2>
+<H3>Member "tin-2.6.3/doc/article.txt" (23 Aug 2021, 1701 Bytes) of package <A HREF="/" TITLE="Fossies homepage">/</A><A HREF="/linux/" TITLE="Listing of all main folders within the Fossies basic folder /linux/">linux</A>/<A HREF="/linux/misc/" TITLE="Listing of all packages within the Fossies folder /linux/misc/">misc</A>/<A HREF="/linux/misc/tin-2.6.3.tar.xz/" TITLE="Contents listing, member browsing, download with different compression formats, Doxygen generated source code documentation &amp; more ...">tin-2.6.3.tar.xz</A>:</H3>
+<HR>
+<DIV class="fresh_info">
+As a special service "Fossies" has tried to format the requested text file into HTML format (style: <A HREF="/select_hl_style_text" style="text-decoration:underline;" onmouseover="Tip(hl_styles_text, ABOVE, false, OFFSETX, 0, OFFSETY, 5, BALLOON, true, FOLLOWMOUSE, false, WIDTH, 730, DELAY, 0, FADEIN, 0, FADEOUT, 1000, DURATION, 20000, STICKY, 1, CLICKCLOSE, true)" onmouseout="UnTip()" TITLE="About highlight style types">standard</A>) with prefixed line numbers.
+Alternatively you can here <A HREF="/linux/misc/tin-2.6.3.tar.xz/tin-2.6.3/doc/article.txt?m=t">view</A> or <A HREF="/linux/misc/tin-2.6.3.tar.xz/tin-2.6.3/doc/article.txt?m=b" onmouseover="Tip(hl_dl_tip, ABOVE, false, OFFSETX, 0, OFFSETY, -5, BALLOON, true, FOLLOWMOUSE, false, WIDTH, 400, DELAY, 0, FADEIN, 0, FADEOUT, 300, DURATION, 10000, STICKY, 1, CLICKCLOSE, true)" onmouseout="UnTip()" TITLE="By the way: A member file download can also be achieved by clicking within a package contents listing on the according byte size field">download</A> the uninterpreted source code file.
+
+</DIV>
+<HR>
+<pre class="hl"><span class="hl lin" id="l_1">    1 </span>This attempts to document the article lifecycle.
+<span class="hl lin" id="l_2">    2 </span>
+<span class="hl lin" id="l_3">    3 </span>arts[] is trashed and rebuilt every time a group is entered.
+<span class="hl lin" id="l_4">    4 </span>This is handled entirely by index_group()
+<span class="hl lin" id="l_5">    5 </span>
+<span class="hl lin" id="l_6">    6 </span>setup_hard_base() creates an array of &#39;valid&#39; article numbers in base[]
+<span class="hl lin" id="l_7">    7 </span>
+<span class="hl lin" id="l_8">    8 </span>read_overview() populates arts[] from overview data (cached or XOVER)
+<span class="hl lin" id="l_9">    9 </span>Articles are initialised with set_article()
+<span class="hl lin" id="l_10">   10 </span>Key initial default values are:
+<span class="hl lin" id="l_11">   11 </span>	art-&gt;thread = ART_EXPIRED
+<span class="hl lin" id="l_12">   12 </span>	art-&gt;status = ART_UNREAD
+<span class="hl lin" id="l_13">   13 </span>
+<span class="hl lin" id="l_14">   14 </span>read_art_headers() then plugs in any gaps due to new articles not yet in the
+<span class="hl lin" id="l_15">   15 </span>overview (or reads all the headers if there are no overviews).
+<span class="hl lin" id="l_16">   16 </span>All articles that are verified as already present (ie loaded by read_overview())
+<span class="hl lin" id="l_17">   17 </span>or are newly added will have art-&gt;thread set to ART_UNTHREADED
+<span class="hl lin" id="l_18">   18 </span>valid_artnum() is used to check if base[n] maps to any known arts[].artnum
+<span class="hl lin" id="l_19">   19 </span>[ After this base[] is reused as the thread base pointer array, which involves
+<span class="hl lin" id="l_20">   20 </span>  a change of type from long to int. This is why the code is full of ugly
+<span class="hl lin" id="l_21">   21 </span>  (int) base[] casts ]
+<span class="hl lin" id="l_22">   22 </span>
+<span class="hl lin" id="l_23">   23 </span>parse_unread_arts() uses the newsrc bitmask to explicitly set
+<span class="hl lin" id="l_24">   24 </span>art-&gt;status to either ART_UNREAD or ART_READ
+<span class="hl lin" id="l_25">   25 </span>Therefore anything not in the bitmap will default to ART_UNREAD
+<span class="hl lin" id="l_26">   26 </span>
+<span class="hl lin" id="l_27">   27 </span>Any articles that still have art-&gt;thread set to ART_EXPIRED will
+<span class="hl lin" id="l_28">   28 </span>have art-&gt;status set to ART_READ
+<span class="hl lin" id="l_29">   29 </span>
+<span class="hl lin" id="l_30">   30 </span>write_overview() rewrites the cached overview data for any
+<span class="hl lin" id="l_31">   31 </span>articles above the group low watermark where arts-&gt;thread != ART_EXPIRED
+<span class="hl lin" id="l_32">   32 </span>
+<span class="hl lin" id="l_33">   33 </span>build_references() doesn&#39;t affect any of this
+<span class="hl lin" id="l_34">   34 </span>
+<span class="hl lin" id="l_35">   35 </span>make_threads() in essence does:
+<span class="hl lin" id="l_36">   36 </span>	if (arts[i].thread &gt;= 0)
+<span class="hl lin" id="l_37">   37 </span>		arts[i].thread = ART_UNTHREADED;
+<span class="hl lin" id="l_38">   38 </span>to &#39;unthread&#39; all the currently threaded &amp; valid arts and calls find_base()
+<span class="hl lin" id="l_39">   39 </span>
+<span class="hl lin" id="l_40">   40 </span>find_base() will not thread articles with -&gt;thread == ART_EXPIRED
+<span class="hl lin" id="l_41">   41 </span>It makes no actual changes to -&gt;status or -&gt;thread
+</pre></BODY></HTML><!--HTML generated by highlight, http://www.andre-simon.de/-->
